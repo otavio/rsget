@@ -5,7 +5,8 @@ extern crate reqwest;
 #[macro_use]
 extern crate structopt;
 
-use std::fs::File;
+use std::fs;
+use std::io;
 use structopt::StructOpt;
 
 #[derive(StructOpt, Debug)]
@@ -31,10 +32,10 @@ fn main() -> Result<(), failure::Error> {
             .unwrap_or("tmp.bin");
 
         println!("Writing to: '{}'", fname);
-        File::create(fname)?
+        fs::File::create(fname)?
     };
 
-    let _ = std::io::copy(&mut res, &mut dest)?;
+    let _ = io::copy(&mut res, &mut dest)?;
 
     Ok(())
 }
