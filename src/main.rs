@@ -28,7 +28,6 @@ fn main() -> Result<(), failure::Error> {
             .url()
             .path_segments()
             .and_then(|segments| segments.last())
-            .and_then(|name| if name.is_empty() { None } else { Some(name) })
             .unwrap_or("tmp.bin");
 
         println!("Writing to: '{}'", fname);
