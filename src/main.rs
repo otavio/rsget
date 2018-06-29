@@ -10,18 +10,18 @@ use structopt::StructOpt;
 
 #[derive(StructOpt, Debug)]
 #[structopt(name = "rsget")]
-struct Opt {
+struct Cmdline {
     /// Output file
     #[structopt(short = "u", long = "url")]
     url: reqwest::Url,
 }
 
 fn main() -> Result<(), failure::Error> {
-    let opt = Opt::from_args();
+    let cmdline = Cmdline::from_args();
 
     env_logger::init();
 
-    let mut res = reqwest::get(opt.url)?;
+    let mut res = reqwest::get(cmdline.url)?;
     let mut dest = {
         // extract target filename from URL
         let fname = res
