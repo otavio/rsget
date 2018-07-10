@@ -1,13 +1,29 @@
 extern crate env_logger;
 extern crate failure;
+extern crate indicatif;
 extern crate reqwest;
 
 #[macro_use]
 extern crate structopt;
 
-use std::fs;
-use std::io;
+use indicatif::{ProgressBar, ProgressStyle};
+use reqwest::{header::ContentLength, Client};
+use std::{fs::File, io, io::copy, io::Read};
 use structopt::StructOpt;
+
+struct DownloadProgress<R> {
+    inner: R,
+    progress_bar: ProgressBar,
+}
+
+impl<R: Read> Read for DownloadProgress<R> {
+    fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
+        self.inner.read(buf).map(|n| {
+            self.progress_bar.inc(n as u64);
+            n
+        })
+    }
+}
 
 #[derive(StructOpt, Debug)]
 #[structopt(name = "rsget")]
@@ -22,20 +38,33 @@ fn main() -> Result<(), failure::Error> {
 
     env_logger::init();
 
-    let mut res = reqwest::get(cmdline.url)?;
-    let mut dest = {
-        // extract target filename from URL
-        let fname = res
-            .url()
-            .path_segments()
-            .and_then(|segments| segments.last())
-            .unwrap_or("tmp.bin");
+    let fname = cmdline
+        .url
+        .path_segments()
+        .and_then(|segments| segments.last())
+        .unwrap_or("tmp.bin");
 
-        println!("Writing to: '{}'", fname);
-        fs::File::create(fname)?
+    let client = Client::new();
+    let total_size = client
+        .head(cmdline.url.clone())
+        .send()?
+        .headers()
+        .get::<ContentLength>()
+        .map(|ct_len| **ct_len)
+        .unwrap_or(0);
+
+    let pb = ProgressBar::new(total_size);
+    pb.set_style(ProgressStyle::default_bar()
+                 .template("{spinner:.green} [{elapsed_precise}] [{bar:40.cyan/blue}] {bytes}/{total_bytes} ({eta})")
+                 .progress_chars("#>-"));
+
+    let mut res = DownloadProgress {
+        progress_bar: pb,
+        inner: reqwest::get(cmdline.url.clone())?,
     };
 
-    let _ = io::copy(&mut res, &mut dest)?;
+    let _ = copy(&mut res, &mut File::create(fname)?)?;
+    println!("Download of '{}' completed.", fname);
 
     Ok(())
 }
