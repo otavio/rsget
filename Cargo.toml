@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["Otavio Salvador <otavio@ossystems.com.br>"]
 
 [dependencies]
-reqwest = "0.8.6"
+reqwest = "0.9.0"
 env_logger = "0.5.10"
 failure = "0.1.1"
 structopt = "0.2.10"
