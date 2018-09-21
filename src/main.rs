@@ -2,6 +2,7 @@ extern crate env_logger;
 extern crate failure;
 extern crate indicatif;
 extern crate reqwest;
+#[macro_use]
 extern crate structopt;
 
 use indicatif::{ProgressBar, ProgressStyle};
