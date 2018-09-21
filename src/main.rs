@@ -2,12 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-extern crate exitfailure;
-extern crate failure;
-extern crate indicatif;
-extern crate reqwest;
-extern crate structopt;
-
 use std::{
     fs,
     io::{self, copy, Read},
@@ -15,6 +9,7 @@ use std::{
 };
 
 use exitfailure::ExitFailure;
+use failure;
 use indicatif::{ProgressBar, ProgressStyle};
 use reqwest::{header, Client};
 use structopt::StructOpt;
