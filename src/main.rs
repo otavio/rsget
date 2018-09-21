@@ -37,34 +37,43 @@ fn main() -> Result<(), failure::Error> {
 
     env_logger::init();
 
-    let fname = cmdline
-        .url
-        .path_segments()
-        .and_then(|segments| segments.last())
-        .unwrap_or("tmp.bin");
-
     let client = Client::new();
-    let total_size = client
-        .head(cmdline.url.clone())
-        .send()?
-        .headers()
-        .get(header::CONTENT_LENGTH)
-        .and_then(|ct_len| ct_len.to_str().ok())
-        .and_then(|ct_len| ct_len.parse().ok())
-        .unwrap_or(0);
+    let resp = client.head(cmdline.url.clone()).send()?;
+    if resp.status().is_success() {
+        let total_size = resp
+            .headers()
+            .get(header::CONTENT_LENGTH)
+            .and_then(|ct_len| ct_len.to_str().ok())
+            .and_then(|ct_len| ct_len.parse().ok())
+            .unwrap_or(0);
 
-    let pb = ProgressBar::new(total_size);
-    pb.set_style(ProgressStyle::default_bar()
-                 .template("{spinner:.green} [{elapsed_precise}] [{bar:40.cyan/blue}] {bytes}/{total_bytes} ({eta})")
-                 .progress_chars("#>-"));
+        let pb = ProgressBar::new(total_size);
+        pb.set_style(ProgressStyle::default_bar()
+                     .template("{spinner:.green} [{elapsed_precise}] [{bar:40.cyan/blue}] {bytes}/{total_bytes} ({eta})")
+                     .progress_chars("#>-"));
 
-    let mut res = DownloadProgress {
-        progress_bar: pb,
-        inner: reqwest::get(cmdline.url.clone())?,
-    };
+        let mut res = DownloadProgress {
+            progress_bar: pb,
+            inner: reqwest::get(cmdline.url.clone())?,
+        };
 
-    let _ = copy(&mut res, &mut File::create(fname)?)?;
-    println!("Download of '{}' completed.", fname);
+        let fname = cmdline
+            .url
+            .path_segments()
+            .and_then(|segments| segments.last())
+            .unwrap_or("tmp.bin");
 
-    Ok(())
+        let _ = copy(&mut res, &mut File::create(fname)?)?;
+        println!("Download of '{}' completed.", fname);
+
+        Ok(())
+    } else {
+        println!(
+            "ERROR: Couldn't download URL: {}. Error: {:?}",
+            cmdline.url,
+            resp.status()
+        );
+
+        Ok(())
+    }
 }
