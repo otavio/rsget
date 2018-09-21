@@ -64,7 +64,7 @@ fn main() -> Result<(), failure::Error> {
             .unwrap_or("tmp.bin");
 
         let _ = copy(&mut res, &mut File::create(fname)?)?;
-        println!("Download of '{}' completed.", fname);
+        println!("Download of '{}' has been completed.", fname);
 
         Ok(())
     } else {
