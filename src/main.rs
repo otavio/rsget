@@ -5,7 +5,7 @@ extern crate reqwest;
 extern crate structopt;
 
 use indicatif::{ProgressBar, ProgressStyle};
-use reqwest::{header::ContentLength, Client};
+use reqwest::{header, Client};
 use std::{fs::File, io, io::copy, io::Read};
 use structopt::StructOpt;
 
@@ -47,8 +47,9 @@ fn main() -> Result<(), failure::Error> {
         .head(cmdline.url.clone())
         .send()?
         .headers()
-        .get::<ContentLength>()
-        .map(|ct_len| **ct_len)
+        .get(header::CONTENT_LENGTH)
+        .and_then(|ct_len| ct_len.to_str().ok())
+        .and_then(|ct_len| ct_len.parse().ok())
         .unwrap_or(0);
 
     let pb = ProgressBar::new(total_size);
