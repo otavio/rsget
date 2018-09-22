@@ -1,4 +1,3 @@
-extern crate env_logger;
 extern crate failure;
 extern crate indicatif;
 extern crate reqwest;
@@ -34,8 +33,6 @@ struct Cmdline {
 
 fn main() -> Result<(), failure::Error> {
     let cmdline = Cmdline::from_args();
-
-    env_logger::init();
 
     let client = Client::new();
     let resp = client.head(cmdline.url.clone()).send()?;

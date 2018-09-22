@@ -8,7 +8,6 @@ but a simple tool to test few Rust crates.
 
 This utility makes use of following crates:
 
-* [env_logger](https://crates.io/crates/env_logger)
 * [failure](https://crates.io/crates/failure)
 * [indicatif](https://crates.io/crates/indicatif)
 * [reqwest](https://crates.io/crates/reqwest)
