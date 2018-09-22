@@ -13,8 +13,9 @@ use exitfailure::ExitFailure;
 use indicatif::{ProgressBar, ProgressStyle};
 use reqwest::{header, Client};
 use std::{
-    fs::File,
+    fs::OpenOptions,
     io::{self, copy, Read},
+    path::Path,
 };
 use structopt::StructOpt;
 
@@ -61,24 +62,37 @@ fn main() -> Result<(), ExitFailure> {
         }
     };
 
+    let mut request = client.get(cmdline.url.as_str());
     let pb = ProgressBar::new(total_size);
     pb.set_style(ProgressStyle::default_bar()
                  .template("{spinner:.green} [{elapsed_precise}] [{bar:40.cyan/blue}] {bytes}/{total_bytes} ({eta})")
                  .progress_chars("#>-"));
 
-    let mut res = DownloadProgress {
+    let file = Path::new(
+        cmdline
+            .url
+            .path_segments()
+            .and_then(|segments| segments.last())
+            .unwrap_or("tmp.bin"),
+    );
+
+    if file.exists() {
+        let size = file.metadata()?.len() - 1;
+        request = request.header(header::RANGE, format!("bytes={}-", size));
+        pb.inc(size);
+    }
+
+    let mut source = DownloadProgress {
         progress_bar: pb,
-        inner: client.get(cmdline.url.as_str()).send()?,
+        inner: request.send()?,
     };
 
-    let filename = cmdline
-        .url
-        .path_segments()
-        .and_then(|segments| segments.last())
-        .unwrap_or("tmp.bin");
-
-    let _ = copy(&mut res, &mut File::create(filename)?)?;
-    println!("Download of '{}' has been completed.", filename);
+    let mut dest = OpenOptions::new().create(true).append(true).open(&file)?;
+    let _ = copy(&mut source, &mut dest)?;
+    println!(
+        "Download of '{}' has been completed.",
+        file.to_str().unwrap()
+    );
 
     Ok(())
 }
