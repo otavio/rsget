@@ -10,7 +10,10 @@ extern crate structopt;
 
 use indicatif::{ProgressBar, ProgressStyle};
 use reqwest::{header, Client};
-use std::{fs::File, io, io::copy, io::Read};
+use std::{
+    fs::File,
+    io::{self, copy, Read},
+};
 use structopt::StructOpt;
 
 struct DownloadProgress<R> {
