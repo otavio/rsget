@@ -1,3 +1,7 @@
+// Copyright (C) 2018 O.S. Systems Sofware LTDA
+//
+// SPDX-License-Identifier: MIT OR Apache-2.0
+
 extern crate failure;
 extern crate indicatif;
 extern crate reqwest;
