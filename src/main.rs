@@ -70,14 +70,14 @@ fn main() -> Result<(), ExitFailure> {
         inner: reqwest::get(cmdline.url.as_str())?,
     };
 
-    let fname = cmdline
+    let filename = cmdline
         .url
         .path_segments()
         .and_then(|segments| segments.last())
         .unwrap_or("tmp.bin");
 
-    let _ = copy(&mut res, &mut File::create(fname)?)?;
-    println!("Download of '{}' has been completed.", fname);
+    let _ = copy(&mut res, &mut File::create(filename)?)?;
+    println!("Download of '{}' has been completed.", filename);
 
     Ok(())
 }
