@@ -37,9 +37,7 @@ struct Cmdline {
 
 fn main() -> Result<(), failure::Error> {
     let cmdline = Cmdline::from_args();
-
-    let client = Client::new();
-    let resp = client.head(cmdline.url.clone()).send()?;
+    let resp = Client::new().head(cmdline.url.clone()).send()?;
     if resp.status().is_success() {
         let total_size = resp
             .headers()
