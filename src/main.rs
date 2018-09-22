@@ -42,9 +42,10 @@ struct Cmdline {
 
 fn main() -> Result<(), ExitFailure> {
     let cmdline = Cmdline::from_args();
+    let client = Client::new();
 
     let total_size = {
-        let resp = Client::new().head(cmdline.url.as_str()).send()?;
+        let resp = client.head(cmdline.url.as_str()).send()?;
         if resp.status().is_success() {
             resp.headers()
                 .get(header::CONTENT_LENGTH)
@@ -67,7 +68,7 @@ fn main() -> Result<(), ExitFailure> {
 
     let mut res = DownloadProgress {
         progress_bar: pb,
-        inner: reqwest::get(cmdline.url.as_str())?,
+        inner: client.get(cmdline.url.as_str()).send()?,
     };
 
     let filename = cmdline
