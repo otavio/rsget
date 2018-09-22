@@ -2,12 +2,14 @@
 //
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
+extern crate exitfailure;
 extern crate failure;
 extern crate indicatif;
 extern crate reqwest;
 #[macro_use]
 extern crate structopt;
 
+use exitfailure::ExitFailure;
 use indicatif::{ProgressBar, ProgressStyle};
 use reqwest::{header, Client};
 use std::{
@@ -38,7 +40,7 @@ struct Cmdline {
     url: reqwest::Url,
 }
 
-fn main() -> Result<(), failure::Error> {
+fn main() -> Result<(), ExitFailure> {
     let cmdline = Cmdline::from_args();
     let resp = Client::new().head(cmdline.url.clone()).send()?;
     if resp.status().is_success() {
@@ -70,12 +72,10 @@ fn main() -> Result<(), failure::Error> {
 
         Ok(())
     } else {
-        println!(
-            "ERROR: Couldn't download URL: {}. Error: {:?}",
+        Err(failure::err_msg(format!(
+            "Couldn't download URL: {}. Error: {:?}",
             cmdline.url,
-            resp.status()
-        );
-
-        Ok(())
+            resp.status(),
+        )).into())
     }
 }
