@@ -39,14 +39,14 @@ fn main() -> Result<(), failure::Error> {
     let cmdline = Cmdline::from_args();
     let resp = Client::new().head(cmdline.url.clone()).send()?;
     if resp.status().is_success() {
-        let total_size = resp
-            .headers()
-            .get(header::CONTENT_LENGTH)
-            .and_then(|ct_len| ct_len.to_str().ok())
-            .and_then(|ct_len| ct_len.parse().ok())
-            .unwrap_or(0);
+        let pb = ProgressBar::new(
+            resp.headers()
+                .get(header::CONTENT_LENGTH)
+                .and_then(|ct_len| ct_len.to_str().ok())
+                .and_then(|ct_len| ct_len.parse().ok())
+                .unwrap_or(0),
+        );
 
-        let pb = ProgressBar::new(total_size);
         pb.set_style(ProgressStyle::default_bar()
                      .template("{spinner:.green} [{elapsed_precise}] [{bar:40.cyan/blue}] {bytes}/{total_bytes} ({eta})")
                      .progress_chars("#>-"));
