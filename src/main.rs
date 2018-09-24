@@ -10,7 +10,7 @@ extern crate reqwest;
 extern crate structopt;
 
 use std::{
-    fs::OpenOptions,
+    fs,
     io::{self, copy, Read},
     path::Path,
 };
@@ -88,8 +88,13 @@ fn main() -> Result<(), ExitFailure> {
         inner: request.send()?,
     };
 
-    let mut dest = OpenOptions::new().create(true).append(true).open(&file)?;
+    let mut dest = fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(&file)?;
+
     let _ = copy(&mut source, &mut dest)?;
+
     println!(
         "Download of '{}' has been completed.",
         file.to_str().unwrap()
