@@ -2,7 +2,7 @@
 name = "rsget"
 version = "0.1.0"
 authors = ["Otavio Salvador <otavio@ossystems.com.br>"]
-license = "MIT OR Apache-2.0"
+license = "Apache-2.0"
 readme = "README.md"
 
 [dependencies]
