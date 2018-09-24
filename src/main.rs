@@ -9,14 +9,15 @@ extern crate reqwest;
 #[macro_use]
 extern crate structopt;
 
-use exitfailure::ExitFailure;
-use indicatif::{ProgressBar, ProgressStyle};
-use reqwest::{header, Client};
 use std::{
     fs::OpenOptions,
     io::{self, copy, Read},
     path::Path,
 };
+
+use exitfailure::ExitFailure;
+use indicatif::{ProgressBar, ProgressStyle};
+use reqwest::{header, Client};
 use structopt::StructOpt;
 
 struct DownloadProgress<R> {
