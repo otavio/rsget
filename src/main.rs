@@ -6,7 +6,6 @@ extern crate exitfailure;
 extern crate failure;
 extern crate indicatif;
 extern crate reqwest;
-#[macro_use]
 extern crate structopt;
 
 use std::{
