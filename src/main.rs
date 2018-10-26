@@ -58,7 +58,8 @@ fn main() -> Result<(), ExitFailure> {
                 "Couldn't download URL: {}. Error: {:?}",
                 cmdline.url,
                 resp.status(),
-            )).into());
+            ))
+            .into());
         }
     };
 
