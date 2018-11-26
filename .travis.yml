@@ -9,6 +9,7 @@ before_script:
   - rustup component add clippy-preview
 matrix:
   allow_failures:
+    - rust: stable
     - rust: nightly
 script:
   - echo "Checking code formatting" ; cargo fmt -- --check
