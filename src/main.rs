@@ -68,7 +68,7 @@ fn main() -> Result<(), ExitFailure> {
         cmdline
             .url
             .path_segments()
-            .and_then(|segments| segments.last())
+            .and_then(std::iter::Iterator::last)
             .unwrap_or("tmp.bin"),
     );
 
