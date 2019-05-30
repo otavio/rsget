@@ -9,6 +9,6 @@ readme = "README.md"
 [dependencies]
 reqwest = "0.9.17"
 failure = "0.1.5"
-structopt = "0.2.15"
+structopt = "0.2.16"
 indicatif = "0.11.0"
 exitfailure = "0.5.1"
