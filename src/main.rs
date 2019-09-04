@@ -1,4 +1,4 @@
-// Copyright (C) 2018 O.S. Systems Sofware LTDA
+// Copyright (C) 2018, 2019 O.S. Systems Sofware LTDA
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -19,7 +19,10 @@ struct DownloadProgress<R> {
     progress_bar: ProgressBar,
 }
 
-impl<R: Read> Read for DownloadProgress<R> {
+impl<R> Read for DownloadProgress<R>
+where
+    R: Read,
+{
     fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
         self.inner.read(buf).map(|n| {
             self.progress_bar.inc(n as u64);
