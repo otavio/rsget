@@ -76,7 +76,7 @@ fn main() -> Result<(), ExitFailure> {
     );
 
     if file.exists() {
-        let size = file.metadata()?.len() - 1;
+        let size = file.metadata()?.len().checked_sub(1).unwrap_or(0);
         request = request.header(header::RANGE, format!("bytes={}-", size));
         pb.inc(size);
     }
