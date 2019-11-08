@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/otavio/rsget.svg?branch=master)](https://travis-ci.org/otavio/rsget)
-
 # rsget
 
 A simple command line utility to download a remote file, similar to
