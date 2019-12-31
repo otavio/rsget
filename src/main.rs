@@ -1,35 +1,14 @@
-// Copyright (C) 2018, 2019 O.S. Systems Sofware LTDA
+// Copyright (C) 2018, 2019, 2020 O.S. Systems Sofware LTDA
 //
 // SPDX-License-Identifier: Apache-2.0
-
-use std::{
-    fs,
-    io::{self, copy, Read},
-    path::Path,
-};
 
 use exitfailure::ExitFailure;
 use failure;
 use indicatif::{ProgressBar, ProgressStyle};
-use reqwest::{blocking::Client, header};
+use reqwest::{header, Client};
+use std::path::Path;
 use structopt::StructOpt;
-
-struct DownloadProgress<R> {
-    inner: R,
-    progress_bar: ProgressBar,
-}
-
-impl<R> Read for DownloadProgress<R>
-where
-    R: Read,
-{
-    fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
-        self.inner.read(buf).map(|n| {
-            self.progress_bar.inc(n as u64);
-            n
-        })
-    }
-}
+use tokio::{fs, io::AsyncWriteExt};
 
 #[derive(StructOpt, Debug)]
 #[structopt(name = "rsget")]
@@ -39,12 +18,13 @@ struct Cmdline {
     url: reqwest::Url,
 }
 
-fn main() -> Result<(), ExitFailure> {
+#[tokio::main]
+async fn main() -> Result<(), ExitFailure> {
     let cmdline = Cmdline::from_args();
     let client = Client::new();
 
     let total_size = {
-        let resp = client.head(cmdline.url.as_str()).send()?;
+        let resp = client.head(cmdline.url.as_str()).send().await?;
         if resp.status().is_success() {
             resp.headers()
                 .get(header::CONTENT_LENGTH)
@@ -77,11 +57,12 @@ fn main() -> Result<(), ExitFailure> {
         pb.inc(size);
     }
 
-    let mut source = DownloadProgress { progress_bar: pb, inner: request.send()? };
-
-    let mut dest = fs::OpenOptions::new().create(true).append(true).open(&file)?;
-
-    let _ = copy(&mut source, &mut dest)?;
+    let mut source = request.send().await?;
+    let mut dest = fs::OpenOptions::new().create(true).append(true).open(&file).await?;
+    while let Some(chunk) = source.chunk().await? {
+        dest.write_all(&chunk).await?;
+        pb.inc(chunk.len() as u64);
+    }
 
     println!("Download of '{}' has been completed.", file.to_str().unwrap());
 
