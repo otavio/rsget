@@ -68,11 +68,7 @@ fn main() -> Result<(), ExitFailure> {
                  .progress_chars("#>-"));
 
     let file = Path::new(
-        cmdline
-            .url
-            .path_segments()
-            .and_then(std::iter::Iterator::last)
-            .unwrap_or("tmp.bin"),
+        cmdline.url.path_segments().and_then(std::iter::Iterator::last).unwrap_or("tmp.bin"),
     );
 
     if file.exists() {
@@ -81,22 +77,13 @@ fn main() -> Result<(), ExitFailure> {
         pb.inc(size);
     }
 
-    let mut source = DownloadProgress {
-        progress_bar: pb,
-        inner: request.send()?,
-    };
+    let mut source = DownloadProgress { progress_bar: pb, inner: request.send()? };
 
-    let mut dest = fs::OpenOptions::new()
-        .create(true)
-        .append(true)
-        .open(&file)?;
+    let mut dest = fs::OpenOptions::new().create(true).append(true).open(&file)?;
 
     let _ = copy(&mut source, &mut dest)?;
 
-    println!(
-        "Download of '{}' has been completed.",
-        file.to_str().unwrap()
-    );
+    println!("Download of '{}' has been completed.", file.to_str().unwrap());
 
     Ok(())
 }
