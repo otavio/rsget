@@ -11,7 +11,7 @@ use std::{
 use exitfailure::ExitFailure;
 use failure;
 use indicatif::{ProgressBar, ProgressStyle};
-use reqwest::{header, Client};
+use reqwest::{blocking::Client, header};
 use structopt::StructOpt;
 
 struct DownloadProgress<R> {

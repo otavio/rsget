@@ -7,7 +7,7 @@ edition = "2018"
 readme = "README.md"
 
 [dependencies]
-reqwest = "0.9.24"
+reqwest = { version = "0.10.0", default-features = false, features = ["blocking"] }
 failure = "0.1.6"
 structopt = "0.3.7"
 indicatif = "0.13.0"
