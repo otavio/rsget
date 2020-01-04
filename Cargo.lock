@@ -679,7 +679,7 @@ dependencies = [
 
 [[package]]
 name = "rsget"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "anyhow 1.0.26 (registry+https://github.com/rust-lang/crates.io-index)",
  "indicatif 0.13.0 (registry+https://github.com/rust-lang/crates.io-index)",
