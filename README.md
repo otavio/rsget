@@ -6,11 +6,11 @@ but a simple tool to test few Rust crates.
 
 This utility makes use of following crates:
 
-* [exitfailure](https://crates.io/crates/exitfailure)
-* [failure](https://crates.io/crates/failure)
+* [anyhow](https://crates.io/crates/anyhow)
 * [indicatif](https://crates.io/crates/indicatif)
 * [reqwest](https://crates.io/crates/reqwest)
 * [structopt](https://crates.io/crates/structopt)
+* [tokio](https://crates.io/crates/tokio)
 
 ## Example
 

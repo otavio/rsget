@@ -2,8 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-use exitfailure::ExitFailure;
-use failure;
+use anyhow::anyhow;
 use indicatif::{ProgressBar, ProgressStyle};
 use reqwest::{header, Client};
 use std::path::Path;
@@ -19,7 +18,7 @@ struct Cmdline {
 }
 
 #[tokio::main]
-async fn main() -> Result<(), ExitFailure> {
+async fn main() -> Result<(), anyhow::Error> {
     let cmdline = Cmdline::from_args();
     let client = Client::new();
 
@@ -32,12 +31,11 @@ async fn main() -> Result<(), ExitFailure> {
                 .and_then(|ct_len| ct_len.parse().ok())
                 .unwrap_or(0)
         } else {
-            return Err(failure::err_msg(format!(
+            return Err(anyhow!(
                 "Couldn't download URL: {}. Error: {:?}",
                 cmdline.url,
                 resp.status(),
-            ))
-            .into());
+            ));
         }
     };
 
