@@ -1,0 +1,2 @@
+disable-publish = true
+tag-name = "{{version}}"
