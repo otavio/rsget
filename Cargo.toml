@@ -9,7 +9,7 @@ readme = "README.md"
 [dependencies]
 anyhow = "1.0.26"
 indicatif = "0.13.0"
-reqwest = "0.10.0"
+reqwest = "0.10.1"
 structopt = "0.3.7"
 tokio = { version = "0.2", features = ["macros", "fs"] }
 
