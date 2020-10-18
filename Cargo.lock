@@ -767,7 +767,7 @@ dependencies = [
 
 [[package]]
 name = "rsget"
-version = "2.0.1-alpha.0"
+version = "2.1.0"
 dependencies = [
  "anyhow",
  "indicatif",
