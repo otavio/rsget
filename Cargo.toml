@@ -7,7 +7,7 @@ edition = "2018"
 readme = "README.md"
 
 [dependencies]
-anyhow = "1.0.33"
+anyhow = "1.0.34"
 indicatif = "0.15.0"
 reqwest = "0.10.8"
 structopt = "0.3.20"
