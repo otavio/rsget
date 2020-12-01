@@ -10,6 +10,6 @@ readme = "README.md"
 anyhow = "1.0.34"
 indicatif = "0.15.0"
 reqwest = "0.10.9"
-structopt = "0.3.20"
+structopt = "0.3.21"
 tokio = { version = "0.3.5", features = ["macros", "fs", "io-util", "rt-multi-thread"] }
 
