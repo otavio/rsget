@@ -3,23 +3,23 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use anyhow::anyhow;
+use clap::Parser;
 use indicatif::{ProgressBar, ProgressStyle};
 use reqwest::{header, Client};
 use std::path::Path;
-use structopt::StructOpt;
 use tokio::{fs, io::AsyncWriteExt};
 
-#[derive(StructOpt, Debug)]
-#[structopt(name = "rsget")]
+#[derive(Parser, Debug)]
+#[clap(author, version)]
 struct Cmdline {
     /// URL to download
-    #[structopt(short = "u", long = "url")]
+    #[clap(short, long)]
     url: reqwest::Url,
 }
 
 #[tokio::main]
 async fn main() -> Result<(), anyhow::Error> {
-    let cmdline = Cmdline::from_args();
+    let cmdline = Cmdline::parse();
     let client = Client::new();
 
     let total_size = {
