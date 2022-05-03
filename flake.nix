@@ -19,6 +19,11 @@
           buildInputs = with pkgs; [
             pkg-config
             openssl
+            cargo
+            rustc
+            rustfmt
+            clippy
+            rust-analyzer
           ];
         };
       });
