@@ -13,7 +13,7 @@ use tokio::{fs, io::AsyncWriteExt};
 #[clap(author, version)]
 struct Cmdline {
     /// URL to download
-    #[clap(short, long)]
+    #[clap(value_parser, short, long)]
     url: reqwest::Url,
 }
 
