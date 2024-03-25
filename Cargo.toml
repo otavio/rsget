@@ -11,5 +11,5 @@ anyhow = "1.0.52"
 clap = { version = "4.5.3", features = ["derive"] }
 indicatif = "0.17.8"
 reqwest = "0.12.1"
-tokio = { version = "1.19.2", features = ["macros", "fs", "io-util", "rt-multi-thread"] }
+tokio = { version = "1.29.1", features = ["macros", "fs", "io-util", "rt-multi-thread"] }
 
