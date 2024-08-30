@@ -10,6 +10,6 @@ readme = "README.md"
 anyhow = "1.0.52"
 clap = { version = "4.5.16", features = ["derive"] }
 indicatif = "0.17.8"
-reqwest = "0.12.5"
+reqwest = "0.12.7"
 tokio = { version = "1.40.0", features = ["macros", "fs", "io-util", "rt-multi-thread"] }
 
