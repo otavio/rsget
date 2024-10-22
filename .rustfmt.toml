@@ -1,11 +1,5 @@
-version = "Two"
 use_small_heuristics = "Max"
 edition = "2018"
 reorder_imports = true
-condense_wildcard_suffixes = true
-merge_imports = true
-reorder_impl_items = true
-spaces_around_ranges = true
 use_field_init_shorthand = true
 use_try_shorthand = true
-wrap_comments = true
