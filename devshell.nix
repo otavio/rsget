@@ -9,6 +9,7 @@ pkgs.mkShell {
     pkg-config
     cargo
     cargo-audit
+    cargo-release
     rustc
     rustfmt
     clippy

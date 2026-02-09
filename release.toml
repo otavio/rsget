@@ -1,2 +1,2 @@
-disable-publish = true
+publish = false
 tag-name = "{{version}}"
