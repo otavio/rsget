@@ -1,10 +1,11 @@
+name: "Continuous Integration"
+
 on:
+  pull_request_target:
+  merge_group:
   push:
     branches:
-      - master
-  pull_request_target:
-
-name: "Continuous Integration"
+      - "master"
 
 concurrency:
   group: ${{ github.repository }}-${{ github.workflow }}
@@ -16,9 +17,8 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@v12
-      - uses: DeterminateSystems/magic-nix-cache-action@v7
+      - uses: actions/checkout@v6
+      - uses: nixbuild/nix-quick-install-action@v34
       - id: set-matrix
         name: Generate Nix Matrix
         run: |
@@ -27,7 +27,7 @@ jobs:
           matrix="$(nix eval --json '.#githubActions.matrix')"
           echo "matrix=${matrix}" >> "$GITHUB_OUTPUT"
 
-  nix-build:
+  nix-check:
     needs: nix-matrix
     runs-on: ${{ matrix.os }}
     strategy:
@@ -35,8 +35,12 @@ jobs:
       max-parallel: 10
       matrix: ${{ fromJSON(needs.nix-matrix.outputs.matrix) }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@v12
-      - uses: DeterminateSystems/magic-nix-cache-action@v7
+      - uses: actions/checkout@v6
+      - uses: nixbuild/nix-quick-install-action@v34
+      - name: Restore and cache Nix store
+        uses: nix-community/cache-nix-action@v7
+        with:
+          primary-key: nix-${{ runner.os }}-${{ hashFiles('flake.*') }}
+          restore-prefixes-first-match: nix-${{ runner.os }}-
       - run: nix build -L ".#${{ matrix.attr }}" --keep-going
       - run: nix develop -c cargo test

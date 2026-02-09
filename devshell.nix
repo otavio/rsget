@@ -8,6 +8,7 @@ pkgs.mkShell {
   nativeBuildInputs = with pkgs; [
     pkg-config
     cargo
+    cargo-audit
     rustc
     rustfmt
     clippy
