@@ -1,28 +1,20 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-
-    blueprint = {
-      url = "github:numtide/blueprint";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    crane.url = "github:ipetkov/crane";
-
-    nix-github-actions = {
-      url = "github:nix-community/nix-github-actions";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    garnix-lib.url = "github:garnix-io/garnix-lib";
   };
 
-  outputs = inputs:
-    let
-      inherit (inputs.nixpkgs) lib;
-      bp = inputs.blueprint { inherit inputs; };
-    in
-    bp // {
-      githubActions = inputs.nix-github-actions.lib.mkGithubMatrix {
-        checks = lib.getAttrs [ "x86_64-linux" ] bp.checks;
-      };
+  nixConfig = {
+    extra-substituters = [ "https://cache.garnix.io" ];
+    extra-trusted-public-keys = [ "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=" ];
+  };
+
+  outputs = inputs: inputs.garnix-lib.lib.mkModules {
+    modules = [
+    ];
+
+    config = { pkgs, ... }: {
+
+      garnix.deployBranch = "master";
     };
+  };
 }
